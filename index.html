@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bop It Game</title>
+    <style>
+      .button {
+        width: 100px;
+        height: 50px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Bop It Game</h1>
+    <p id="instruction">Get ready to start!</p>
+    <button class="button" id="bopIt">Bop It</button>
+    <button class="button" id="spinIt">Spin It</button>
+    <button class="button" id="flickIt">Flick It</button>
+    <button class="button" id="crankIt">Crank It</button>
+    <button class="button" id="start">Start!</button>
+    <p id="score">Score: 0</p>
+    <!-- <p id="timer">Time Left: <span id="countdown">5</span></p> -->
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+  const sayings = ['bopIt', 'spinIt', 'flickIt', 'crankIt'];
+  let sequence = [];
+  let playerSequence = [];
+  let score = 0;
+
+  const instructionElement = document.getElementById('instruction');
+  const scoreElement = document.getElementById('score');
+  const buttons = {
+    bopIt: document.getElementById('bopIt'),
+    spinIt: document.getElementById('spinIt'),
+    flickIt: document.getElementById('flickIt'),
+    crankIt: document.getElementById('crankIt'),
+  };
+
+  // const countdownElement = document.getElementById('countdown');
+  // let countdownValue = 5;
+
+  // function updateCountdown() {
+  //   countdownElement.textContent = countdownValue;
+  //   countdownValue--;
+
+  //   if (countdownValue >= 0) {
+  //     setTimeout(updateCountdown, 1000);
+  //   } else {
+  //     gameOver();
+  //   }
+  // }
+
+  function startGame() {
+    addToSequence();
+    playSequence();
+  }
+
+  const addToSequence = () => {
+    const randomSaying = sayings[Math.floor(Math.random() * sayings.length)];
+    sequence.push(randomSaying);
+  };
+
+  const playSequence = () => {
+    instructionElement.textContent = 'Watch and repeat!';
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < sequence.length) {
+        const button = buttons[sequence[i]];
+        button.style.backgroundColor = 'lightgreen';
+        setTimeout(() => {
+          button.style.backgroundColor = '';
+        }, 200);
+        i++;
+      } else {
+        clearInterval(interval);
+        instructionElement.textContent = 'Your turn!';
+        // updateCountdown();
+      }
+    }, 500);
+  };
+
+  const checkPlayerInput = () => {
+    console.log(playerSequence.join(''))
+    console.log(sequence.join(''))
+    if (playerSequence.join('') === sequence.join('')) {
+      playerSequence = [];
+      score++;
+      scoreElement.textContent = `Score: ${score}`;
+      countdownValue = 5;
+      addToSequence();
+      playSequence();
+    } else {
+      gameOver();
+    }
+  };
+
+  const gameOver = () => {
+    instructionElement.textContent = `Game Over! Your score: ${score}`;
+    sequence = [];
+    playerSequence = [];
+    score = 0;
+    scoreElement.textContent = `Score: ${score}`;
+  };
+
+  for (const saying of sayings) {
+    buttons[saying].addEventListener('click', () => {
+      playerSequence.push(saying);
+      if (playerSequence.length === sequence.length) {
+        checkPlayerInput();
+      }
+    });
+  }
+
+  document.getElementById('start').addEventListener('click', () => {
+    startGame();
+  });
+});
+
+    </script>
+  </body>
+</html>
